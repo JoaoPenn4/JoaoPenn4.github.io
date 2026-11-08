@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AliExpress BR Product Assistant</title>
+  <meta name="description" content="Personal affiliate tool that searches products for the Brazilian market using the AliExpress Affiliate API.">
+  <link rel="icon" href="favicon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <img src="logo.png" alt="App logo">
+      <div>
+        <h1>AliExpress BR Product Assistant</h1>
+        <p>Product search and affiliate links for shoppers in Brazil</p>
+      </div>
+    </header>
+
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="privacy.html">Privacy policy</a>
+    </nav>
+
+    <section>
+      <h2>What it does</h2>
+      <p>A personal affiliate tool that helps Brazilian users find products on AliExpress through an AI assistant.
+        It searches products, shows prices in BRL with shipping to Brazil, and generates affiliate links that are
+        tracked through my AliExpress Portals affiliate account.</p>
+    </section>
+
+    <section>
+      <h2>AliExpress Affiliate API methods used</h2>
+      <ul>
+        <li><code>aliexpress.affiliate.product.query</code>: product search</li>
+        <li><code>aliexpress.affiliate.productdetail.get</code>: product details</li>
+        <li><code>aliexpress.affiliate.hotproduct.query</code>: trending products</li>
+        <li><code>aliexpress.affiliate.category.get</code>: category list</li>
+        <li><code>aliexpress.affiliate.featuredpromo.get</code> and <code>featuredpromo.products.get</code>: promotions</li>
+        <li><code>aliexpress.affiliate.link.generate</code>: affiliate link generation</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>How it works</h2>
+      <p>The app runs as an MCP (Model Context Protocol) server. A user asks an AI assistant for a product, the
+        server queries the Affiliate API (ship to: BR, currency: BRL, language: PT) and returns the results with
+        affiliate links. The user completes any purchase on AliExpress itself.</p>
+    </section>
+
+    <section>
+      <h2>Data</h2>
+      <p>The app reads only public product and promotion data. It does not collect, store or share buyer
+        personal data, and it does not process orders or payments. See the <a href="privacy.html">privacy policy</a>.</p>
+    </section>
+
+    <footer>
+      Independent project. Not affiliated with, endorsed by or operated by AliExpress or Alibaba Group.
+    </footer>
+  </div>
+</body>
+</html>
