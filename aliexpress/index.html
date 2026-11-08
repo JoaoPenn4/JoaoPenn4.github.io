@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AliExpress BR Product Assistant</title>
-  <meta name="description" content="Personal affiliate tool that searches products for the Brazilian market using the AliExpress Affiliate API.">
+  <meta name="description" content="A free AI assistant tool that helps shoppers in Brazil find AliExpress products, compare prices in BRL and discover promotions. Product links are affiliate links.">
   <link rel="icon" href="favicon.png">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -14,7 +14,7 @@
       <img src="logo.png" alt="App logo">
       <div>
         <h1>AliExpress BR Product Assistant</h1>
-        <p>Product search and affiliate links for shoppers in Brazil</p>
+        <p>Find AliExpress products for Brazil by asking your AI assistant</p>
       </div>
     </header>
 
@@ -23,11 +23,33 @@
       <a href="privacy.html">Privacy policy</a>
     </nav>
 
+    <section class="notice">
+      <h2>Affiliate disclosure</h2>
+      <p>Product links returned by this tool are AliExpress affiliate links. If you buy something through one of
+        them, I may earn a commission from AliExpress. You pay the same price, and the commission is how this free
+        tool is kept running.</p>
+    </section>
+
     <section>
       <h2>What it does</h2>
-      <p>A personal affiliate tool that helps Brazilian users find products on AliExpress through an AI assistant.
-        It searches products, shows prices in BRL with shipping to Brazil, and generates affiliate links that are
-        tracked through my AliExpress Portals affiliate account.</p>
+      <p>A free tool for shoppers in Brazil. You connect it to an AI assistant and ask for products in plain
+        language, for example "a mechanical keyboard under R$ 200". The assistant searches AliExpress for you and
+        shows:</p>
+      <ul>
+        <li>products that ship to Brazil, with prices in BRL</li>
+        <li>product details, ratings and sales volume</li>
+        <li>trending products and current AliExpress promotions</li>
+        <li>a link to each product on AliExpress, where you complete any purchase</li>
+      </ul>
+      <p>Prices come straight from AliExpress and do not include import taxes (Remessa Conforme) or coupons.</p>
+    </section>
+
+    <section>
+      <h2>How to use it</h2>
+      <p>The tool is an MCP (Model Context Protocol) server, which works as a connector for AI assistants such as
+        Claude. Add the connector address in your assistant's connector settings and start asking for products.
+        Access is free; to get the connector address, get in touch through
+        <a href="https://github.com/JoaoPenn4">github.com/JoaoPenn4</a>.</p>
     </section>
 
     <section>
@@ -40,23 +62,19 @@
         <li><code>aliexpress.affiliate.featuredpromo.get</code> and <code>featuredpromo.products.get</code>: promotions</li>
         <li><code>aliexpress.affiliate.link.generate</code>: affiliate link generation</li>
       </ul>
-    </section>
-
-    <section>
-      <h2>How it works</h2>
-      <p>The app runs as an MCP (Model Context Protocol) server. A user asks an AI assistant for a product, the
-        server queries the Affiliate API (ship to: BR, currency: BRL, language: PT) and returns the results with
-        affiliate links. The user completes any purchase on AliExpress itself.</p>
+      <p>Every request is fixed to ship to Brazil, BRL currency and Portuguese language.</p>
     </section>
 
     <section>
       <h2>Data</h2>
-      <p>The app reads only public product and promotion data. It does not collect, store or share buyer
-        personal data, and it does not process orders or payments. See the <a href="privacy.html">privacy policy</a>.</p>
+      <p>The tool works only with public product and promotion data. It does not ask for accounts, does not process
+        orders or payments, and does not collect buyer personal data. See the
+        <a href="privacy.html">privacy policy</a> for details.</p>
     </section>
 
     <footer>
-      Independent project. Not affiliated with, endorsed by or operated by AliExpress or Alibaba Group.
+      Independent project run by João Pedro Penna Sales, Brazil. Not affiliated with, endorsed by or operated by
+      AliExpress or Alibaba Group.
     </footer>
   </div>
 </body>
