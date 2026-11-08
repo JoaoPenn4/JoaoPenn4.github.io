@@ -1,17 +1,18 @@
 <!doctype html>
-<html lang="en" data-type="software" data-radius="soft" data-ground="sky" data-buttons="solid" data-motion>
+<html lang="pt-BR" data-type="software" data-radius="round" data-ground="sage" data-buttons="solid" data-motion>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>AliExpress BR Product Assistant: AliExpress search in Claude for Brazil</title>
-<meta name="description" content="A free connector that lets Claude search AliExpress for products that ship to Brazil, with prices in reais and affiliate links.">
+<title>Achei.ai: achados do AliExpress na sua IA, com entrega no Brasil</title>
+<meta name="description" content="Peça um produto para a sua IA e receba opções do AliExpress que entregam no Brasil, com preço em reais e link para comprar. Grátis.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="AliExpress BR Product Assistant">
-<meta property="og:description" content="Ask Claude for a product and get AliExpress items that ship to Brazil, priced in reais.">
+<meta property="og:title" content="Achei.ai">
+<meta property="og:description" content="Achados do AliExpress direto na sua IA: preço em reais, entrega no Brasil.">
 <meta property="og:image" content="share.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="favicon.png">
-<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" type="image/png">
+<meta name="theme-color" content="#fffdf8">
 <!-- <link rel="canonical" href="https://joaopenn4.github.io/aliexpress/"> -->
 <meta name="site-kind" content="software">
 <meta name="page-type" content="software">
@@ -26,10 +27,10 @@
 <link rel="stylesheet" href="assets/icons/icon.css">
 <style>
 :root {
-  --p-bg: #ffffff; --p-surface: #f4f4f4; --p-ink: #111111; --p-muted: #6b6b6b;
-  --p-accent: #1a4be0; --p-accent-ink: #ffffff; --p-action: #1a4be0; --p-action-ink: #ffffff;
-  --p-inv-bg: #111111; --p-inv-surface: #1e1e1e; --p-inv-ink: #ffffff; --p-inv-muted: #9a9a9a;
-  --p-inv-accent: #ffffff; --p-inv-accent-ink: #111111; --p-inv-action: #ffffff; --p-inv-action-ink: #111111;
+  --p-bg: #fffdf8; --p-surface: #f3f1ea; --p-ink: #15231b; --p-muted: #5b665f;
+  --p-accent: #0b7a4f; --p-accent-ink: #fffdf8; --p-action: #0b7a4f; --p-action-ink: #fffdf8;
+  --p-inv-bg: #15231b; --p-inv-surface: #233028; --p-inv-ink: #fffdf8; --p-inv-muted: #9da39c;
+  --p-inv-accent: #0b7a4f; --p-inv-accent-ink: #fffdf8; --p-inv-action: #0b7a4f; --p-inv-action-ink: #fffdf8;
   --font-display: "Instrument Sans", system-ui, sans-serif;
   --font-text: "Instrument Sans", system-ui, sans-serif;
   --font-mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
@@ -52,7 +53,9 @@
 <link rel="modulepreload" href="assets/moments/lib.js">
 <link rel="modulepreload" href="assets/moments/line-carries-colour/moment.js">
 <style>
-  /* the hero's chat on the lit ground */
+  /* the brand mark beside the name (the client's own logo) */
+  .nav__logo { display: inline-flex; align-items: center; gap: var(--s-2); }
+  .nav__logo img { width: 32px; height: 32px; border-radius: 8px; }
   .hero__media .stage { position: absolute; inset: 0; }
   /* app-frame recipe (sections-library.md) */
   .app.ui { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); margin-top: var(--s-7); background: var(--u-bg); border: 1px solid var(--u-border); border-radius: var(--u-r); box-shadow: var(--u-shadow); }
@@ -74,35 +77,37 @@
     .app > .app__pane--list { display: none; }
     .app > .app__pane + .app__pane { border-top: 0; }
   }
-  .rows__name { font-family: var(--font-mono); }
-  .close__word { font-size: clamp(40px, 14.6vw, 216px); line-height: 1; overflow: visible; }
-  #how .frame { height: 100%; }
-  @media (max-width: 639px) { #how .grid.fill { height: auto; } #how .frame { height: 280px; } }
-  #search .app { margin-bottom: var(--s-10); }
-  #tools .rows > li { grid-template-columns: minmax(0, 1fr) auto; }
-  #tools .rows__value { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
-  @media (max-width: 639px) { #tools .rows > li { grid-template-columns: minmax(0, 1fr); } #tools .rows__value { grid-column: 1; grid-row: auto; } }
-  #tools .rows__api { grid-column: 1; margin: 0; font-size: var(--t-small); color: var(--muted); }
-  .faq-marks { display: flex; gap: var(--s-4); }
+  #buscas .app { margin-bottom: var(--s-10); }
+  #exemplos .rows__name { font-size: var(--t-card); }
+  #exemplos .rows__value { align-self: center; }
+  @media (max-width: 639px) { #exemplos .rows > li { grid-template-columns: minmax(0, 1fr); } }
+  #instalar .frame { height: 100%; }
+  #instalar .rows__name { display: block; font-weight: 500; }
+  #instalar .rows > li { grid-template-columns: minmax(0, 1fr); }
+  #instalar .rows p { margin: var(--s-1) 0 0; }
+  @media (max-width: 639px) { #instalar .grid.fill { height: auto; } #instalar .frame { height: 300px; } }
+  @media (max-width: 359px) { #instalar { --hm: 2; } #instalar .frame { height: 240px; } }
+  .faq-marks { display: flex; flex-wrap: wrap; gap: var(--s-4); }
+  .close__word { font-size: clamp(48px, 24.4vw, 376px); line-height: 1; overflow: visible; }
 </style>
 </head>
 <body>
 <!-- type: software
-     deal: hero split, nav nav-centre, close close-word, footer footer-statement, rhythm dark-band, buttons solid, mark wordmark, grounds sky (lit ground)
-     palette white-link-blue (a white sheet and one blue: plain retail colours, and nothing like AliExpress's own red), type instrument
-     moments: line-carries-colour on #tools (the dark band) -->
+     deal: hero split, nav nav-centre, close close-word, footer footer-statement, rhythm dark-band, buttons solid, mark the client's own logo (Achei.ai), grounds sage (lit ground)
+     palette: the client's own (start.mjs brand): warm white, deep green, a yellow check in the logo only; green reads as "found" and stays clear of AliExpress's red. Type instrument.
+     moments: line-carries-colour on #exemplos (the dark band) -->
 <header class="nav nav--centre">
   <div class="wrap nav__bar">
-    <a class="skip-link" href="#top">Skip to content</a>
-    <a class="nav__logo" href="#top">AliExpress BR</a>
-    <nav class="nav__links" aria-label="Main">
-      <div class="nav__item"><a class="nav__link" href="#search">Search</a></div>
-      <div class="nav__item"><a class="nav__link" href="#tools">Tools</a></div>
-      <div class="nav__item"><a class="nav__link" href="#how">Setup</a></div>
-      <div class="nav__item"><a class="nav__link" href="#faq">Questions</a></div>
+    <a class="skip-link" href="#top">Pular para o conteúdo</a>
+    <a class="nav__logo" href="#top"><img src="logo.svg" alt="" width="32" height="32">Achei.ai</a>
+    <nav class="nav__links" aria-label="Principal">
+      <div class="nav__item"><a class="nav__link" href="#buscas">Buscas</a></div>
+      <div class="nav__item"><a class="nav__link" href="#exemplos">Exemplos</a></div>
+      <div class="nav__item"><a class="nav__link" href="#instalar">Instalação</a></div>
+      <div class="nav__item"><a class="nav__link" href="#duvidas">Dúvidas</a></div>
     </nav>
     <div class="nav__actions">
-      <a class="btn btn--primary" href="https://github.com/JoaoPenn4">Request free access</a>
+      <a class="btn btn--primary" href="https://github.com/JoaoPenn4">Pedir acesso grátis</a>
     </div>
     <button class="nav__toggle" type="button" aria-expanded="false" aria-label="Menu">
       <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
@@ -114,24 +119,24 @@
   <section class="hero hero--split" data-enter aria-labelledby="hero-h">
     <div class="wrap"><div class="hero-text grid hero__grid">
       <div class="hero__text span-5">
-        <p class="hero__kicker"><span class="dot" aria-hidden="true"></span>Free to use, 7 tools on the AliExpress Affiliate API</p>
-        <h1 id="hero-h">AliExpress search inside Claude, for Brazil</h1>
-        <p class="hero__lead">Ask Claude for a product in plain Portuguese. It searches AliExpress for items that ship to Brazil and answers with prices in reais, ratings and a link.</p>
-        <div class="btn-row"><a class="btn btn--primary" href="https://github.com/JoaoPenn4">Request free access<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a><a class="btn btn--secondary" href="#how">See the setup</a></div>
+        <p class="hero__kicker"><span class="dot" aria-hidden="true"></span>Grátis, instala em 3 passos em qualquer IA</p>
+        <h1 id="hero-h">Achados do AliExpress pela sua IA, no Brasil</h1>
+        <p class="hero__lead">Peça um produto do jeito que você fala. O Achei.ai busca no AliExpress o que entrega no Brasil, com preço em reais, nota e link.</p>
+        <div class="btn-row"><a class="btn btn--primary" href="https://github.com/JoaoPenn4">Pedir acesso grátis<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a><a class="btn btn--secondary" href="#instalar">Ver a instalação</a></div>
       </div>
-      <div class="hero__media frame--lit span-6 start-7" role="img" aria-label="A Claude chat: a question for a mechanical keyboard under R$ 200 answered with AliExpress results priced in reais">
+      <div class="hero__media frame--lit span-6 start-7" role="img" aria-label="Uma conversa com a IA: o pedido de um teclado mecânico até R$ 200 respondido com opções do AliExpress em reais">
         <div class="stage stage--fade-b"><div class="at-rise to-edge fit" style="--fit-max:440px;--ax:max(24px, 50% - 220px);--ay:56px;--ay-sm:24px" data-ui-loop>
           <div class="ui ui-panel ui-chat" data-ui="chat">
-            <div class="ui-head"><span class="ui-agent" aria-hidden="true"></span><div class="ui-title">Claude</div><span class="ui-chat__online">AliExpress BR connected</span><span class="ui-spacer"></span></div>
+            <div class="ui-head"><span class="ui-agent" aria-hidden="true"></span><div class="ui-title">Sua IA</div><span class="ui-chat__online">Achei.ai conectado</span><span class="ui-spacer"></span></div>
             <div class="ui-chat__body">
-              <div class="ui-chat__day">Today, 20:14</div>
+              <div class="ui-chat__day">Hoje, 20:14</div>
               <div class="ui-msg ui-msg--me" data-chat-q><span class="ui-msg__text">Teclado mecânico até R$ 200 com entrega no Brasil?</span></div>
               <div class="ui-msg ui-msg--bot" data-chat-a>
                 <span class="ui-agent ui-msg__av" aria-hidden="true"></span>
                 <span class="ui-msg__col">
                   <span class="ui-chat__typing" aria-hidden="true"><i></i><i></i><i></i></span>
                   <span class="ui-chat__answer">Achei 12 que entregam no Brasil. O mais barato com nota acima de 4,8 sai por <b>R$ 164,90</b>, sem impostos.</span>
-                  <span class="ui-chat__srcs"><span class="ui-chat__src"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg>buscar_produtos</span><span class="ui-chat__src"><svg class="ui-icon" viewBox="0 0 16 16"><path d="M6.5 9.5 9.5 6.5"/><path d="M7 4.5 8.5 3a2.5 2.5 0 0 1 3.5 3.5L10.5 8"/><path d="M9 11.5 7.5 13A2.5 2.5 0 0 1 4 9.5L5.5 8"/></svg>gerar_link_afiliado</span></span>
+                  <span class="ui-chat__srcs"><span class="ui-chat__src"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg>AliExpress</span><span class="ui-chat__src"><svg class="ui-icon" viewBox="0 0 16 16"><path d="M6.5 9.5 9.5 6.5"/><path d="M7 4.5 8.5 3a2.5 2.5 0 0 1 3.5 3.5L10.5 8"/><path d="M9 11.5 7.5 13A2.5 2.5 0 0 1 4 9.5L5.5 8"/></svg>Link para comprar</span></span>
                 </span>
               </div>
               <div class="ui-msg ui-msg--me"><span class="ui-msg__text">Mostra os detalhes do primeiro</span></div>
@@ -141,50 +146,50 @@
               </div>
               <div class="ui-msg ui-msg--me"><span class="ui-msg__text">Gera o link pra comprar</span></div>
             </div>
-            <div class="ui-chat__input"><span class="ui-chat__ph">Reply to Claude</span><span class="ui-chat__send" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M8 13V3.5M3.8 7.5 8 3.3l4.2 4.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ui-chat__input"><span class="ui-chat__ph">Responder</span><span class="ui-chat__send" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M8 13V3.5M3.8 7.5 8 3.3l4.2 4.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           </div>
         </div></div>
       </div>
     </div></div>
   </section>
 
-  <section class="section" id="search" aria-labelledby="search-h">
+  <section class="section" id="buscas" aria-labelledby="buscas-h">
     <div class="wrap">
       <div class="grid">
-        <h2 id="search-h" class="span-5">Every product search in one chat</h2>
-        <p class="span-6 start-7">You ask, Claude calls the connector, and the products come back with the price in reais, the rating, the sales count and a link to buy on AliExpress. <a class="link" href="#tools">See the 7 tools</a></p>
+        <h2 id="buscas-h" class="span-5">Suas buscas do AliExpress numa conversa</h2>
+        <p class="span-6 start-7">Peça por preço, categoria ou ocasião. A resposta já vem com o preço em reais, a nota de quem comprou, quantos vendeu e o link para comprar no AliExpress. <a class="link" href="#exemplos">Ver exemplos de pedidos</a></p>
       </div>
-      <div class="ui app fill" role="img" aria-label="A list of product searches beside the open search for a 65 W USB-C charger, answered with three AliExpress results" data-ui-pause-host>
+      <div class="ui app fill" role="img" aria-label="Uma lista de buscas ao lado da busca aberta por um carregador USB-C de 65 W, respondida com três opções do AliExpress" data-ui-pause-host>
         <div class="app__pane app__pane--list">
-          <div class="ui ui-panel ui-win" data-ui="window" data-open="New" data-work="Searching" data-done="Answered">
+          <div class="ui ui-panel ui-win" data-ui="window" data-open="Nova" data-work="Buscando" data-done="Respondida">
             <div class="ui-win__bar">
               <span class="ui-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-              <span class="ui-win__crumb">Searches <i>/</i> <b>This week</b></span>
+              <span class="ui-win__crumb">Buscas <i>/</i> <b>Esta semana</b></span>
               <span class="ui-spacer"></span>
-              <span class="ui-win__search" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg><span class="ui-win__ph">Search</span><span class="ui-kbd">/</span></span>
+              <span class="ui-win__search" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg><span class="ui-win__ph">Buscar</span><span class="ui-kbd">/</span></span>
             </div>
             <div class="ui-win__body">
               <nav class="ui-win__side" aria-hidden="true">
-                <span class="ui-win__nav is-on"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg>Searches<em>11</em></span>
-                <span class="ui-win__nav"><svg class="ui-icon" viewBox="0 0 16 16"><path d="M8 2.5l1.7 3.5 3.8.5-2.8 2.6.7 3.8L8 11.1l-3.4 1.8.7-3.8-2.8-2.6 3.8-.5z"/></svg>Saved<em>4</em></span>
-                <span class="ui-win__nav"><svg class="ui-icon" viewBox="0 0 16 16"><path d="M2.5 6.5h11v7h-11z"/><path d="M5.5 6.5V4.5a2.5 2.5 0 0 1 5 0v2"/></svg>Deals</span>
-                <span class="ui-win__label">Categories</span>
-                <span class="ui-win__nav"><span class="ui-win__hash">#</span>Electronics</span>
-                <span class="ui-win__nav"><span class="ui-win__hash">#</span>Home</span>
+                <span class="ui-win__nav is-on"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg>Buscas<em>11</em></span>
+                <span class="ui-win__nav"><svg class="ui-icon" viewBox="0 0 16 16"><path d="M8 2.5l1.7 3.5 3.8.5-2.8 2.6.7 3.8L8 11.1l-3.4 1.8.7-3.8-2.8-2.6 3.8-.5z"/></svg>Salvos<em>4</em></span>
+                <span class="ui-win__nav"><svg class="ui-icon" viewBox="0 0 16 16"><path d="M2.5 6.5h11v7h-11z"/><path d="M5.5 6.5V4.5a2.5 2.5 0 0 1 5 0v2"/></svg>Promoções</span>
+                <span class="ui-win__label">Categorias</span>
+                <span class="ui-win__nav"><span class="ui-win__hash">#</span>Eletrônicos</span>
+                <span class="ui-win__nav"><span class="ui-win__hash">#</span>Casa</span>
               </nav>
               <div class="ui-win__main">
-                <div class="ui-win__cols" aria-hidden="true"><span>Asked for</span><span>Result</span><span>Status</span><span>Age</span></div>
+                <div class="ui-win__cols" aria-hidden="true"><span>Pedido</span><span>Resultado</span><span>Status</span><span>Quando</span></div>
                 <ul class="ui-win__rows">
-                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="1">CH</span><span class="ui-win__who">USB-C charger 65 W</span><span class="ui-win__sub">3 found · from R$ 58,40</span><span class="ui-win__st" data-st>New</span><span class="ui-win__age">1m</span></li>
-                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="3">KB</span><span class="ui-win__who">Mechanical keyboard</span><span class="ui-win__sub">12 found · under R$ 200</span><span class="ui-win__st is-done" data-st>Answered</span><span class="ui-win__age">8m</span></li>
-                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="4">LD</span><span class="ui-win__who">LED desk lamp</span><span class="ui-win__sub">7 found · 4.7 stars and up</span><span class="ui-win__st is-done" data-st>Answered</span><span class="ui-win__age">22m</span></li>
-                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="2">BT</span><span class="ui-win__who">Bike tail light</span><span class="ui-win__sub">5 found · from R$ 19,90</span><span class="ui-win__st is-done" data-st>Answered</span><span class="ui-win__age">1h</span></li>
-                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="5">PH</span><span class="ui-win__who">Phone case</span><span class="ui-win__sub">20 found · trending</span><span class="ui-win__st is-done" data-st>Answered</span><span class="ui-win__age">2h</span></li>
-                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="3">EB</span><span class="ui-win__who">Wireless earbuds</span><span class="ui-win__sub">9 found · Choice deals</span><span class="ui-win__st is-done" data-st>Answered</span><span class="ui-win__age">3h</span></li>
-                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="1">SD</span><span class="ui-win__who">Screwdriver set</span><span class="ui-win__sub">6 found · from R$ 34,10</span><span class="ui-win__st is-done" data-st>Answered</span><span class="ui-win__age">5h</span></li>
-                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="4">GP</span><span class="ui-win__who">Gamepad for PC</span><span class="ui-win__sub">8 found · under R$ 150</span><span class="ui-win__st is-done" data-st>Answered</span><span class="ui-win__age">1d</span></li>
-                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="2">CB</span><span class="ui-win__who">Cable organiser</span><span class="ui-win__sub">14 found · 1,000+ sold</span><span class="ui-win__st is-done" data-st>Answered</span><span class="ui-win__age">2d</span></li>
-                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="5">MS</span><span class="ui-win__who">Silent mouse</span><span class="ui-win__sub">10 found · from R$ 27,80</span><span class="ui-win__st is-done" data-st>Answered</span><span class="ui-win__age">3d</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="1">CA</span><span class="ui-win__who">Carregador USB-C 65 W</span><span class="ui-win__sub">3 opções · a partir de R$ 58,40</span><span class="ui-win__st" data-st>Nova</span><span class="ui-win__age">1 min</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="3">TE</span><span class="ui-win__who">Teclado mecânico</span><span class="ui-win__sub">12 opções · até R$ 200</span><span class="ui-win__st is-done" data-st>Respondida</span><span class="ui-win__age">8 min</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="4">LU</span><span class="ui-win__who">Luminária de mesa LED</span><span class="ui-win__sub">7 opções · nota 4,7 ou mais</span><span class="ui-win__st is-done" data-st>Respondida</span><span class="ui-win__age">22 min</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="2">LA</span><span class="ui-win__who">Lanterna para bike</span><span class="ui-win__sub">5 opções · a partir de R$ 19,90</span><span class="ui-win__st is-done" data-st>Respondida</span><span class="ui-win__age">1 h</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="5">CP</span><span class="ui-win__who">Capinha de celular</span><span class="ui-win__sub">20 opções · mais vendidas</span><span class="ui-win__st is-done" data-st>Respondida</span><span class="ui-win__age">2 h</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="3">FO</span><span class="ui-win__who">Fone sem fio</span><span class="ui-win__sub">9 opções · em promoção</span><span class="ui-win__st is-done" data-st>Respondida</span><span class="ui-win__age">3 h</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="1">CH</span><span class="ui-win__who">Jogo de chaves</span><span class="ui-win__sub">6 opções · a partir de R$ 34,10</span><span class="ui-win__st is-done" data-st>Respondida</span><span class="ui-win__age">5 h</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="4">CO</span><span class="ui-win__who">Controle para PC</span><span class="ui-win__sub">8 opções · até R$ 150</span><span class="ui-win__st is-done" data-st>Respondida</span><span class="ui-win__age">ontem</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="2">OR</span><span class="ui-win__who">Organizador de cabos</span><span class="ui-win__sub">14 opções · 1.000+ vendidos</span><span class="ui-win__st is-done" data-st>Respondida</span><span class="ui-win__age">2 dias</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="5">MO</span><span class="ui-win__who">Mouse silencioso</span><span class="ui-win__sub">10 opções · a partir de R$ 27,80</span><span class="ui-win__st is-done" data-st>Respondida</span><span class="ui-win__age">3 dias</span></li>
                 </ul>
               </div>
             </div>
@@ -192,16 +197,16 @@
         </div>
         <div class="app__pane app__pane--open" data-ui-loop>
           <div class="ui ui-panel ui-chat" data-ui="chat">
-            <div class="ui-head"><span class="ui-agent" aria-hidden="true"></span><div class="ui-title">USB-C charger 65 W</div><span class="ui-chat__online">Ships to Brazil</span><span class="ui-spacer"></span></div>
+            <div class="ui-head"><span class="ui-agent" aria-hidden="true"></span><div class="ui-title">Carregador USB-C 65 W</div><span class="ui-chat__online">Entrega no Brasil</span><span class="ui-spacer"></span></div>
             <div class="ui-chat__body">
-              <div class="ui-chat__day">Today, 21:02</div>
+              <div class="ui-chat__day">Hoje, 21:02</div>
               <div class="ui-msg ui-msg--me" data-chat-q><span class="ui-msg__text">Carregador USB-C de 65 W que carregue notebook, até R$ 100</span></div>
               <div class="ui-msg ui-msg--bot" data-chat-a>
                 <span class="ui-agent ui-msg__av" aria-hidden="true"></span>
                 <span class="ui-msg__col">
                   <span class="ui-chat__typing" aria-hidden="true"><i></i><i></i><i></i></span>
                   <span class="ui-chat__answer">Três opções com entrega no Brasil. A melhor avaliada é um GaN de 65 W por <b>R$ 89,90</b>, nota 4,9, mais de 3 mil vendidos.</span>
-                  <span class="ui-chat__srcs"><span class="ui-chat__src"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg>buscar_produtos</span><span class="ui-chat__src"><svg class="ui-icon" viewBox="0 0 16 16"><path d="M4 2.5h5l3 3v8H4z"/><path d="M9 2.5v3h3"/></svg>detalhes_produto</span></span>
+                  <span class="ui-chat__srcs"><span class="ui-chat__src"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg>AliExpress</span><span class="ui-chat__src"><svg class="ui-icon" viewBox="0 0 16 16"><path d="M4 2.5h5l3 3v8H4z"/><path d="M9 2.5v3h3"/></svg>Detalhes do produto</span></span>
                 </span>
               </div>
               <div class="ui-msg ui-msg--me"><span class="ui-msg__text">Gera o link desse</span></div>
@@ -211,63 +216,63 @@
               </div>
               <div class="ui-msg ui-msg--me"><span class="ui-msg__text">E um cabo USB-C de 2 m?</span></div>
             </div>
-            <div class="ui-chat__input"><span class="ui-chat__ph">Reply to Claude</span><span class="ui-chat__send" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M8 13V3.5M3.8 7.5 8 3.3l4.2 4.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ui-chat__input"><span class="ui-chat__ph">Responder</span><span class="ui-chat__send" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M8 13V3.5M3.8 7.5 8 3.3l4.2 4.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section ground-inverse" style="--hm: 2" id="tools" aria-labelledby="tools-h" data-moment="line-carries-colour" data-moment-opts='{"from": "base"}'>
+  <section class="section ground-inverse" id="exemplos" aria-labelledby="exemplos-h" data-moment="line-carries-colour" data-moment-opts='{"from": "base"}'>
     <div class="wrap">
       <div class="grid">
         <div class="section-head span-5">
-          <h2 id="tools-h">Seven tools on the AliExpress Affiliate API</h2>
-          <p>Every call is fixed to shipping to Brazil, prices in reais and Portuguese product text, so Claude never shows an item that cannot reach you.</p>
+          <h2 id="exemplos-h">Pedidos que o Achei.ai entende</h2>
+          <p>Escreva como você escreveria para um amigo. O Achei.ai só mostra o que entrega no Brasil, com preço em reais e descrição em português.</p>
         </div>
         <ul class="rows span-6 start-7">
-          <li><span class="rows__name">buscar_produtos</span><p class="rows__api">aliexpress.affiliate.product.query</p><span class="rows__value">Search by words, price and category</span></li>
-          <li><span class="rows__name">detalhes_produto</span><p class="rows__api">aliexpress.affiliate.productdetail.get</p><span class="rows__value">Details from IDs or links</span></li>
-          <li><span class="rows__name">gerar_link_afiliado</span><p class="rows__api">aliexpress.affiliate.link.generate</p><span class="rows__value">An affiliate link to buy</span></li>
-          <li><span class="rows__name">listar_categorias</span><p class="rows__api">aliexpress.affiliate.category.get</p><span class="rows__value">Categories, kept for 24 hours</span></li>
-          <li><span class="rows__name">produtos_em_alta</span><p class="rows__api">aliexpress.affiliate.hotproduct.query</p><span class="rows__value">Products selling well now</span></li>
-          <li><span class="rows__name">listar_promocoes</span><p class="rows__api">aliexpress.affiliate.featuredpromo.get</p><span class="rows__value">Current AliExpress promotions</span></li>
-          <li><span class="rows__name">produtos_da_promocao</span><p class="rows__api">aliexpress.affiliate.featuredpromo.products.get</p><span class="rows__value">Products in one promotion</span></li>
+          <li><span class="rows__name">“Fone bluetooth até R$ 100”</span><span class="rows__value">Busca por preço</span></li>
+          <li><span class="rows__name">“Presente para quem gosta de cozinhar”</span><span class="rows__value">Ideias por ocasião</span></li>
+          <li><span class="rows__name">“Quais promoções estão rolando?”</span><span class="rows__value">Promoções do momento</span></li>
+          <li><span class="rows__name">“Me fala mais sobre este link”</span><span class="rows__value">Detalhes de um produto</span></li>
+          <li><span class="rows__name">“Gera o link pra eu comprar”</span><span class="rows__value">Link para comprar</span></li>
         </ul>
       </div>
     </div>
   </section>
 
-  <section class="section" id="how" aria-labelledby="how-h">
+  <section class="section" id="instalar" aria-labelledby="instalar-h">
     <div class="wrap">
       <div class="grid fill">
         <div class="span-5 stack-5">
-          <h2 id="how-h">How a search runs</h2>
-          <p class="t-lead">Add the connector to Claude once. Every product question then goes through it to AliExpress and back.</p>
-          <p>Prices leave out import tax under Remessa Conforme and any coupons, so check the total at checkout.</p>
-          <p><a class="link" href="privacy.html">Read the privacy policy</a></p>
+          <h2 id="instalar-h">Instalação em 3 passos</h2>
+          <ol class="rows">
+            <li><span class="rows__name">1. Peça o acesso</span><p>Mande uma mensagem no GitHub e receba o endereço do conector.</p></li>
+            <li><span class="rows__name">2. Conecte na sua IA</span><p>Cole o endereço nos conectores da sua IA: Claude, ChatGPT, Gemini, Kimi ou outra.</p></li>
+            <li><span class="rows__name">3. Peça o que quiser</span><p>Pergunte por um produto e a IA busca no AliExpress para você.</p></li>
+          </ol>
         </div>
         <div class="frame frame--split frame--lit span-6 start-7">
-          <div class="dg" data-diagram data-dg-still><script type="application/json">{"layout":"lanes","size":"card","alt":"A question in Claude goes to the connector, which searches products, reads details and makes an affiliate link at once.","input":{"label":"Claude","icon":"claude","sub":"You ask"},"core":{"label":"Connector","icon":"ui:server"},"lanes":[{"label":"Search","icon":"ui:search","done":true,"sub":"Products"},{"label":"Details","icon":"ui:file-text","done":true,"sub":"One item"},{"label":"Link","icon":"ui:link","done":true,"sub":"To buy"}]}</script></div>
+          <div class="dg" data-diagram data-dg-still><script type="application/json">{"layout":"hub","size":"card","alt":"O Achei.ai no centro, ligado a qualquer IA, como Claude, ChatGPT, Gemini e Kimi.","center":{"label":"Achei.ai","icon":"ui:search"},"spokes":[{"label":"Claude","icon":"claude"},{"label":"ChatGPT","icon":"openai"},{"label":"Gemini","icon":"gemini"},{"label":"Kimi","icon":"logos:moonshot-ai-icon"},{"label":"Qualquer IA","icon":"ui:sparkles"}]}</script></div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section" id="faq" aria-labelledby="faq-h">
+  <section class="section" id="duvidas" aria-labelledby="duvidas-h">
     <div class="wrap">
       <div class="grid">
         <div class="span-5 stack-5">
-          <h2 id="faq-h">Questions</h2>
-          <p>Run by João Pedro Penna Sales, an AliExpress affiliate in Brazil. Anything else, ask on GitHub.</p>
-          <p class="faq-marks"><img data-icon="claude" src="assets/icons/claude.svg" alt="Claude" width="40" height="40"><img data-icon="si:aliexpress" src="assets/icons/aliexpress.svg" alt="AliExpress" width="156" height="40"></p>
-          <p><a class="link" href="https://github.com/JoaoPenn4">Ask on GitHub</a></p>
+          <h2 id="duvidas-h">Dúvidas sobre o Achei.ai</h2>
+          <p>Feito por João Pedro Penna Sales, afiliado do AliExpress no Brasil. Outra dúvida? Pergunte no GitHub.</p>
+          <p class="faq-marks"><img data-icon="claude" src="assets/icons/claude.svg" alt="Claude" width="40" height="40"><img data-icon="openai" src="assets/icons/openai.svg" alt="ChatGPT" width="40" height="40"><img data-icon="gemini" src="assets/icons/gemini.svg" alt="Gemini" width="40" height="40"><img data-icon="logos:moonshot-ai-icon" src="assets/icons/moonshot-ai-icon.svg" alt="Kimi" width="40" height="40"></p>
+          <p><a class="link" href="https://github.com/JoaoPenn4">Perguntar no GitHub</a></p>
         </div>
         <div class="faq span-6 start-7">
-          <div class="faq__item"><h3>Does the connector cost anything?</h3><p>No. If you buy through one of its links, AliExpress may pay me a commission. Your price stays the same.</p></div>
-          <div class="faq__item"><h3>Are the prices in reais final?</h3><p>No. They come straight from AliExpress and leave out Remessa Conforme import tax and coupons.</p></div>
-          <div class="faq__item"><h3>Does it see my AliExpress account?</h3><p>No. It reads the public affiliate catalogue and never asks for an account, address or card.</p></div>
-          <div class="faq__item"><h3>How do I get the connector address?</h3><p>Ask on GitHub. You get the connector address to paste into Claude's connector settings.</p></div>
+          <div class="faq__item"><h3>O Achei.ai é pago?</h3><p>Não. Se você comprar por um dos links, o AliExpress pode me pagar uma comissão. O seu preço continua o mesmo.</p></div>
+          <div class="faq__item"><h3>O preço inclui impostos e cupons?</h3><p>Não. O preço vem direto do AliExpress, sem o imposto do Remessa Conforme e sem cupons. Confira o total na hora de pagar.</p></div>
+          <div class="faq__item"><h3>O Achei.ai vê minha conta do AliExpress?</h3><p>Não. Ele só consulta o catálogo público e nunca pede conta, endereço ou cartão.</p></div>
+          <div class="faq__item"><h3>Quais IAs aceitam o conector do Achei.ai?</h3><p>Qualquer IA que aceite conectores, como Claude, ChatGPT, Gemini e Kimi. Basta colar o endereço nas configurações da IA.</p></div>
         </div>
       </div>
     </div>
@@ -278,30 +283,30 @@
   <div class="wrap">
     <div class="closing__cta close--word">
       <div class="section-head--split">
-        <div><h2 id="close-h">Search AliExpress from Claude</h2><p class="t-lead">Free, with prices in reais and shipping to Brazil.</p></div>
-        <a class="btn btn--primary" href="https://github.com/JoaoPenn4">Request free access<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
+        <div><h2 id="close-h">Ache no AliExpress pela sua IA</h2><p class="t-lead">Grátis, com preço em reais e entrega no Brasil.</p></div>
+        <a class="btn btn--primary" href="https://github.com/JoaoPenn4">Pedir acesso grátis<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
       </div>
-      <p class="close__word" aria-hidden="true">AliExpress BR</p>
+      <p class="close__word" aria-hidden="true">Achei.ai</p>
     </div>
     <div class="closing__links">
       <div class="grid">
         <div class="span-4 stack-4">
-          <a class="nav__logo" href="#top">AliExpress BR</a>
-          <p class="footer__lede">A free Claude connector for AliExpress shopping in Brazil. Product links are affiliate links.</p>
+          <a class="nav__logo" href="#top"><img src="logo.svg" alt="" width="32" height="32">Achei.ai</a>
+          <p class="footer__lede">Achados do AliExpress na sua IA, para quem compra no Brasil. Os links são links de afiliado.</p>
         </div>
-        <div class="span-2 start-7 footer__col"><h3>Product</h3><ul><li><a href="#search">Search</a></li><li><a href="#tools">Tools</a></li></ul></div>
-        <div class="span-2 footer__col"><h3>Use</h3><ul><li><a href="#how">Setup</a></li><li><a href="#faq">Questions</a></li></ul></div>
-        <div class="span-2 footer__col"><h3>About</h3><ul><li><a href="privacy.html">Privacy</a></li><li><a href="https://github.com/JoaoPenn4">GitHub</a></li></ul></div>
+        <div class="span-2 start-7 footer__col"><h3>Produto</h3><ul><li><a href="#buscas">Buscas</a></li><li><a href="#exemplos">Exemplos</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Uso</h3><ul><li><a href="#instalar">Instalação</a></li><li><a href="#duvidas">Dúvidas</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Sobre</h3><ul><li><a href="privacy.html">Privacidade</a></li><li><a href="https://github.com/JoaoPenn4">GitHub</a></li></ul></div>
       </div>
       <div class="footer__legal">
-        <span>&copy; 2026 João Pedro Penna Sales. Not affiliated with AliExpress or Alibaba Group. Product names and logos are trademarks of their owners.</span>
+        <span>&copy; 2026 João Pedro Penna Sales. Sem ligação com o AliExpress ou o Alibaba Group. Nomes e marcas de produtos pertencem aos seus donos.</span>
       </div>
     </div>
   </div>
 </footer>
 
-<nav class="actionbar" aria-label="Quick actions">
-  <a class="btn btn--primary" href="https://github.com/JoaoPenn4">Request free access</a>
+<nav class="actionbar" aria-label="Ações rápidas">
+  <a class="btn btn--primary" href="https://github.com/JoaoPenn4">Pedir acesso grátis</a>
 </nav>
 
 <script type="module" src="assets/system.js"></script>
